@@ -1,19 +1,32 @@
-import React from "react";
-import Card from "../Components/Card";
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { useAppContext } from './AppContext';
 
-//Este componente debera ser estilado como "dark" o "light" dependiendo del theme del Context
+function Favorites() {
+  
+  const { state } = useAppContext();
+  const { apiData, favorites } = state;
 
-const Favs = () => {
+  {/*  use chat gpt para esta */}
+  const favoriteDentists = apiData.filter((dentist) => favorites.includes(dentist.id));
 
   return (
-    <>
-      <h1>Dentists Favs</h1>
-      <div className="card-grid">
-        {/* este componente debe consumir los destacados del localStorage */}
-        {/* Deberan renderizar una Card por cada uno de ellos */}
-      </div>
-    </>
+    <div>
+      <h1>Dentistas Favoritos</h1>
+      {favoriteDentists.map((dentist) => (
+        <div key={dentist.id}>
+          <h2>{dentist.name}</h2>
+          <p>Email: {dentist.email}</p>
+          <p>Teléfono: {dentist.phone}</p>
+          <p>Website: {dentist.website}</p>
+        </div>
+      ))}
+
+      
+      <Link to="/home">Volver a la página de inicio</Link>
+    </div>
   );
-};
+}
 
 export default Favs;
+

@@ -1,17 +1,63 @@
-import React from 'react'
-import Card from '../Components/Card'
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useAppContext } from './AppContext';
 
-//Este componente debera ser estilado como "dark" o "light" dependiendo del theme del Context
+function Home() {
+  const { state, dispatch } = useAppContext();
+  const { apiData } = state;
 
-const Home = () => {
+
+  useEffect(() => {
+
+
+    async function fetchData() {
+      try {
+        const response = await fetch('https://jsonplaceholder.typicode.com/users');
+        const data = await response.json();
+
+
+        dispatch({ type: 'SET_API_DATA', payload: data });
+
+
+
+
+      } catch (error) {
+        console.error('Error al obtener datos de la API', error);
+      }
+    }
+
+    fetchData();
+  }, [dispatch]);
+
+
+
+
+
+
+
   return (
-    <main className="" >
+
+    <div>
       <h1>Home</h1>
-      <div className='card-grid'>
-        {/* Aqui deberias renderizar las cards */}
-      </div>
-    </main>
-  )
+      {apiData &&
+        apiData.map((dentist) => (
+
+
+          <div key={dentist.id}>
+            <Link to={`/dentist/${dentist.id}`}>
+              <h2>{dentist.name}</h2>
+            </Link>
+            <p>Email: {dentist.email}</p>
+            <p>Teléfono: {dentist.phone}</p>
+            <p>Website: {dentist.website}</p>
+          </div>
+
+          
+        ))}
+
+
+    </div>
+  );
 }
 
-export default Home
+export default Home;
